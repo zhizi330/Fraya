@@ -8,23 +8,31 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
 body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #e0e0e0; overflow: hidden; }
 .phone-mockup { width: 375px; height: 812px; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; overflow: hidden; display: flex; flex-direction: column; border: 8px solid #fff; background: var(--wallpaper, #FDF9F1); transition: background 0.3s ease; }
-.status-bar { height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; font-size: 14px; font-weight: 600; color: #333; z-index: 10; }
+.status-bar { height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; font-size: 14px; font-weight: 600; color: #333; z-index: 10; }
+.status-left { display: flex; align-items: baseline; gap: 8px; }
+.status-date { font-size: 11px; color: #888; font-weight: 500; }
 .status-right { display: flex; align-items: center; gap: 6px; font-size: 12px; }
-.widget { margin: 10px 20px; padding: 18px; background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border-radius: 30px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 8px 30px rgba(0,0,0,0.04); border: 1px solid rgba(255,255,255,0.8); }
+.widget { margin: 10px 20px 8px 20px; padding: 18px; background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border-radius: 30px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 8px 30px rgba(0,0,0,0.04); border: 1px solid rgba(255,255,255,0.8); }
 .couple-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; transition: all 0.3s ease; }
 .couple-row.reversed { flex-direction: row-reverse; }
 .avatar-container { width: 58px; height: 58px; border-radius: 50%; background: #fff; padding: 3px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; overflow: hidden; }
 .avatar-container img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 .relationship-badge { font-size: 11px; background: #FFE4E8; color: #FF6B81; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; font-weight: 600; }
-.heart-icon { font-size: 16px; color: #FF8C9A; cursor: pointer; }
+.heart-icon { font-size: 22px; color: #FF8C9A; cursor: pointer; font-weight: bold; }
 .nicknames { display: flex; gap: 30px; font-size: 14px; font-weight: 600; color: #4A4A4A; }
 .nickname { cursor: text; border: none; background: transparent; text-align: center; width: 70px; font-size: 14px; font-weight: 600; color: #4A4A4A; outline: none; padding: 4px 6px; border-radius: 8px; font-family: inherit; }
 .nickname:focus { background: #FFE4E8; }
 .love-days { margin-top: 12px; text-align: center; width: 100%; }
 .days-count { font-size: 26px; font-weight: 800; color: #FF8C9A; }
 .days-text { font-size: 11px; color: #888; margin-left: 4px; }
+.ann-widget { margin: 0 20px 8px 20px; padding: 15px 20px; background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border-radius: 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 30px rgba(0,0,0,0.04); border: 1px solid rgba(255,255,255,0.8); cursor: pointer; }
+.ann-widget-info { display: flex; flex-direction: column; }
+.ann-widget-title { font-size: 13px; color: #888; font-weight: 600; }
+.ann-widget-days { font-size: 24px; font-weight: 800; color: #FF8C9A; margin-top: 2px; }
+.ann-widget-days span { font-size: 12px; color: #888; font-weight: 500; }
+.ann-widget-icon { font-size: 28px; color: #FF8C9A; }
 .settings-icon { position: absolute; top: 55px; right: 24px; font-size: 18px; cursor: pointer; z-index: 20; color: #888; }
-.moyu-widget { margin: 0 20px 15px 20px; padding: 15px 20px; background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border-radius: 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 30px rgba(0,0,0,0.04); border: 1px solid rgba(255,255,255,0.8); cursor: pointer; }
+.moyu-widget { margin: 0 20px 8px 20px; padding: 15px 20px; background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border-radius: 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 30px rgba(0,0,0,0.04); border: 1px solid rgba(255,255,255,0.8); cursor: pointer; }
 .moyu-info { display: flex; flex-direction: column; }
 .moyu-title { font-size: 13px; color: #666; font-weight: 600; }
 .moyu-days { font-size: 26px; font-weight: 800; color: #4A4A4A; margin-top: 2px; }
@@ -32,36 +40,33 @@ body { display: flex; justify-content: center; align-items: center; min-height: 
 .moyu-icon { width: 60px; height: 60px; background: #E0E0E0; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 32px; }
 .toast { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%) scale(0.8); background: rgba(0,0,0,0.78); color: white; padding: 12px 24px; border-radius: 20px; font-size: 13px; z-index: 9999; opacity: 0; transition: all 0.3s ease; pointer-events: none; white-space: nowrap; }
 .toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-.app-grid { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px 10px; padding: 15px 16px; align-content: flex-start; overflow-y: auto; }
+.app-grid { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 10px; padding: 10px 16px; align-content: flex-start; overflow-y: auto; }
 .app-item { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
-.app-icon { width: 52px; height: 52px; background: rgba(255,255,255,0.8); border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.app-icon { width: 50px; height: 50px; background: rgba(255,255,255,0.8); border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
 .app-name { font-size: 10px; color: #555; font-weight: 500; }
-.dock { height: 80px; margin: 0 16px 20px 16px; background: rgba(255,255,255,0.6); backdrop-filter: blur(15px); border-radius: 30px; display: flex; justify-content: space-around; align-items: center; padding: 0 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.06); }
-.full-page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #FDF9F1; z-index: 200; display: none; flex-direction: column; }
+.dock { height: 75px; margin: 0 16px 15px 16px; background: rgba(255,255,255,0.6); backdrop-filter: blur(15px); border-radius: 30px; display: flex; justify-content: space-around; align-items: center; padding: 0 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.06); }
+.full-page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #F8F8F8; z-index: 200; display: none; flex-direction: column; }
 .page-header { height: 56px; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; background: #fff; border-bottom: 1px solid #eee; flex-shrink: 0; }
 .page-title { font-size: 16px; font-weight: 600; color: #333; }
 .back-btn, .add-btn { font-size: 20px; color: #FF8C9A; cursor: pointer; width: 40px; text-align: center; }
 .modal-mask { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 9999; border-radius: 32px; }
-.modal-content { background: #fff; width: 82%; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-.modal-content input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #eee; border-radius: 10px; outline: none; font-size: 14px; }
-.modal-content button { padding: 8px 20px; margin: 5px; border: none; border-radius: 15px; background: #FF8C9A; color: white; font-weight: 600; cursor: pointer; }
-.modal-content button.cancel { background: #eee; color: #666; }
-.dm-hero { padding: 30px 20px; background: #fff; text-align: center; border-bottom: 1px solid #f0f0f0; }
-.dm-hero-title { font-size: 14px; color: #888; }
-.dm-hero-days { font-size: 64px; font-weight: 800; color: #333; line-height: 1.1; margin: 8px 0; }
-.dm-hero-sub { font-size: 12px; color: #aaa; }
-.dm-list { flex: 1; overflow-y: auto; padding: 16px; }
-.dm-item { background: #fff; border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-.dm-item-name { font-size: 15px; color: #444; font-weight: 600; }
-.dm-item-days { font-size: 18px; font-weight: 800; padding: 6px 12px; border-radius: 10px; color: #fff; }
-.dm-item-days.countdown { background: #4DA6FF; }
-.dm-item-days.countup { background: #FF9F43; }
-.dm-form { padding: 20px; display: none; flex-direction: column; gap: 16px; }
-.dm-form input { padding: 14px; border: 1px solid #eee; border-radius: 12px; font-size: 15px; outline: none; }
-.dm-form .type-switch { display: flex; gap: 10px; }
-.dm-form .type-switch button { flex: 1; padding: 12px; border: 1px solid #eee; background: #fff; border-radius: 12px; font-size: 14px; cursor: pointer; }
-.dm-form .type-switch button.active { background: #FFE4E8; color: #FF6B81; border-color: #FFB6C1; font-weight: 600; }
-.dm-form .save-btn { padding: 14px; background: #FF8C9A; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+.modal-content { background: #fff; width: 85%; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); box-sizing: border-box; }
+.modal-content h3 { font-size: 16px; margin-bottom: 12px; text-align: center; }
+.modal-content input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #eee; border-radius: 10px; font-size: 14px; outline: none; box-sizing: border-box; }
+.modal-content .btn-row { display: flex; gap: 10px; }
+.modal-content .btn-row button { flex: 1; padding: 12px; border: none; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.modal-content .btn-save { background: #1A1A1A; color: #fff; }
+.modal-content .btn-delete { background: #FF4D4D; color: #fff; }
+.modal-content .btn-cancel { background: #eee; color: #666; }
+.ann-tabs { display: flex; gap: 8px; padding: 15px 16px; }
+.ann-tab { padding: 8px 20px; border-radius: 20px; background: #fff; font-size: 13px; color: #666; cursor: pointer; border: 1px solid #eee; }
+.ann-tab.active { background: #1A1A1A; color: #fff; border-color: #1A1A1A; font-weight: 600; }
+.ann-list { padding: 0 16px 20px; overflow-y: auto; flex: 1; }
+.ann-item-card { background: #fff; padding: 16px; border-radius: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.02); cursor: pointer; }
+.ann-item-card .name { font-size: 14px; font-weight: 600; color: #333; }
+.ann-item-card .date { font-size: 11px; color: #999; margin-top: 4px; }
+.ann-item-card .days { font-size: 18px; font-weight: 800; color: #FF8C9A; }
+.ann-add-btn { margin: 0 16px 20px 16px; padding: 16px; border: 1px dashed #ccc; border-radius: 16px; text-align: center; font-size: 14px; color: #888; cursor: pointer; background: #fff; }
 #postPage { background: #F4ECD8; }
 #postPage .page-header { background: #F4ECD8; border-bottom: 1px solid #E3D5B8; }
 #postPage .page-title { color: #5D4037; }
@@ -90,8 +95,6 @@ body { display: flex; justify-content: center; align-items: center; min-height: 
 .letter-badge { background: #FF8C9A; color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 6px; font-weight: 500; }
 .letter-preview { font-size: 13px; color: #999; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .letter-time { font-size: 11px; color: #bbb; text-align: right; flex-shrink: 0; }
-.letter-top-tip { position: absolute; top: 60px; left: 50%; transform: translateX(-50%) translateY(-10px); background: rgba(93, 64, 55, 0.9); color: #F4ECD8; padding: 8px 18px; border-radius: 20px; font-size: 12px; z-index: 9999; opacity: 0; transition: all 0.4s ease; pointer-events: none; white-space: nowrap; }
-.letter-top-tip.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 #periodPage { background: #FDFBFB; }
 .period-main { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
 .period-card { background: #fff; border-radius: 24px; padding: 24px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #F5EBEB; }
@@ -153,22 +156,36 @@ body { display: flex; justify-content: center; align-items: center; min-height: 
 </head>
 <body>
 <div class="phone-mockup" id="phone">
-    <div class="status-bar"><span>Freya</span><span id="clock">16:54</span><div class="status-right"><span>📶</span><span>🔋</span></div></div>
+    <div class="status-bar">
+        <div class="status-left"><span>Freya</span><span class="status-date" id="dateText">9月22日 周二</span></div>
+        <span id="clock">16:54</span>
+        <div class="status-right"><span>📶</span><span>🔋</span></div>
+    </div>
     <div class="settings-icon" onclick="openSettings()">⚙️</div>
     <div class="widget">
         <div class="relationship-badge" id="relBadge" onclick="openSettings()">恋人</div>
         <div class="couple-row" id="coupleRow">
             <div class="avatar-container" onclick="openAlbum('user')"><img id="avatarUser" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Me&backgroundColor=ffdfbf"></div>
-            <div class="heart-icon" onclick="flipWidget()">❤️</div>
+            <div class="heart-icon" onclick="flipWidget()">♡</div>
             <div class="avatar-container" onclick="openAlbum('partner')"><img id="avatarPartner" src="https://api.dicebear.com/7.x/adventurer/svg?seed=TA&backgroundColor=d1d4f9"></div>
         </div>
         <div class="nicknames"><input class="nickname" id="nameUser" value="我" maxlength="8"><input class="nickname" id="namePartner" value="TA" maxlength="8"></div>
         <div class="love-days"><span class="days-count" id="daysCount">0</span><span class="days-text">天</span><div class="days-text" id="startDateText">2026.09.18 起</div></div>
     </div>
+
+    <div class="ann-widget" onclick="openAnnPage()">
+        <div class="ann-widget-info">
+            <span class="ann-widget-title" id="widgetAnnTitle">纪念日</span>
+            <span class="ann-widget-days" id="widgetAnnDays">0 <span>天</span></span>
+        </div>
+        <div class="ann-widget-icon">📅</div>
+    </div>
+
     <div class="moyu-widget" id="moyuWidget" onclick="doCheckIn()">
         <div class="moyu-info"><span class="moyu-title">已摸鱼</span><span class="moyu-days"><span id="moyuDays">0</span> 天</span></div>
         <div class="moyu-icon">🥸</div>
     </div>
+
     <div class="app-grid">
         <div class="app-item" onclick="alert('聊天页面开发中...')"><div class="app-icon">💬</div><span class="app-name">聊天</span></div>
         <div class="app-item" onclick="alert('主页开发中...')"><div class="app-icon">⭐</div><span class="app-name">主页</span></div>
@@ -182,12 +199,19 @@ body { display: flex; justify-content: center; align-items: center; min-height: 
     </div>
     <div class="dock"><div class="app-item"><div class="app-icon">📱</div></div><div class="app-item" onclick="changeWallpaper()"><div class="app-icon">🖼️</div></div><div class="app-item"><div class="app-icon">⚙️</div></div></div>
     <div class="toast" id="toast"></div>
-    <!-- 纪念日 -->
+
+<!-- 纪念日全屏页面 -->
 <div class="full-page" id="annPage">
-    <div class="page-header"><div class="back-btn" onclick="closeAnnPage()">←</div><div class="page-title">Days Matter · 纪念日</div><div class="add-btn" onclick="showAddAnnForm()">＋</div></div>
-    <div id="annListView"><div class="dm-hero"><div class="dm-hero-title" id="heroTitle">距离 新年 还有</div><div class="dm-hero-days" id="heroDays">101</div><div class="dm-hero-sub" id="heroSub">目标日：2027-1-1 星期五</div></div><div class="dm-list" id="annListContainer"></div></div>
-    <div class="dm-form" id="annAddForm"><input type="text" id="newAnnName" placeholder="输入事件名称（如：和夏老师）" maxlength="12"><input type="date" id="newAnnDate"><div style="font-size:13px; color:#888; margin-top:-8px;">选择目标日（未来为倒数，过去为正数）</div><div class="type-switch"><button class="active" onclick="setAnnType('countdown')" id="btnCountdown">倒数（未来）</button><button onclick="setAnnType('countup')" id="btnCountup">正数（过去）</button></div><button class="save-btn" onclick="saveNewAnn()">保存</button><button class="save-btn" style="background:#eee; color:#666; margin-top:0;" onclick="hideAddAnnForm()">取消</button></div>
+    <div class="page-header"><div class="back-btn" onclick="closeAnnPage()">←</div><div class="page-title">纪念日</div><div style="width:40px;"></div></div>
+    <div class="ann-tabs">
+        <div class="ann-tab active" onclick="switchAnnTab('爱情向', this)">爱情向</div>
+        <div class="ann-tab" onclick="switchAnnTab('亲情向', this)">亲情向</div>
+        <div class="ann-tab" onclick="switchAnnTab('友情向', this)">友情向</div>
+    </div>
+    <div class="ann-list" id="annListContainer"></div>
+    <div class="ann-add-btn" onclick="openEditAnnModal(null)">+ 添加纪念日</div>
 </div>
+
 <!-- 邮局 -->
 <div class="full-page" id="postPage">
     <div class="page-header"><div class="back-btn" onclick="closePostPage()">←</div><div class="page-title">邮局</div><div style="width:40px;"></div></div>
@@ -207,7 +231,6 @@ body { display: flex; justify-content: center; align-items: center; min-height: 
     <div class="inbox-tabs"><div class="tab active" onclick="switchInboxTab('received', this)">收到的信</div><div class="tab" onclick="switchInboxTab('sent', this)">寄出的信</div><div class="tab" onclick="openWritePage()">写封信</div><div class="tab" onclick="showToast('数据管理功能开发中')">信件数据</div></div>
     <div class="inbox-list" id="inboxList"></div>
 </div>
-<div class="letter-top-tip" id="letterTopTip"></div>
 <!-- 经期 -->
 <div class="full-page" id="periodPage">
     <div class="page-header"><div class="back-btn" onclick="closePeriodPage()">←</div><div class="page-title">经期记录</div><div style="width:40px;"></div></div>
@@ -231,39 +254,150 @@ body { display: flex; justify-content: center; align-items: center; min-height: 
     <div class="memo-list" id="memoList"></div>
     <div class="memo-footer"><span>共 <span id="memoCount">0</span> 项</span><span style="cursor:pointer;" onclick="clearMemo()">清空数据</span></div>
 </div>
-<!-- 弹窗 -->
+<!-- 纪念日编辑弹窗 -->
+<div class="modal-mask" id="annEditModal">
+    <div class="modal-content">
+        <h3 id="annModalTitle">添加纪念日</h3>
+        <input type="text" id="editAnnName" placeholder="事件名称（如：和爱妻）" maxlength="12">
+        <input type="date" id="editAnnDate">
+        <div class="btn-row" style="margin-top:10px;">
+            <button class="btn-save" onclick="saveEditAnn()">保存修改</button>
+            <button class="btn-delete" id="annDeleteBtn" onclick="deleteEditAnn()" style="display:none;">删除</button>
+            <button class="btn-cancel" onclick="closeModal('annEditModal')">取消</button>
+        </div>
+    </div>
+</div>
+
+<!-- 头像弹窗 -->
 <div class="modal-mask" id="albumModal">
-    <div class="modal-content"><h3 style="margin-bottom:10px; font-size:16px;">选择头像</h3><div style="display:flex; justify-content:space-around; margin-bottom:15px;"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=1&backgroundColor=ffdfbf" style="width:50px; height:50px; border-radius:50%; cursor:pointer;" onclick="selectAvatar(this.src)"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=2&backgroundColor=d1d4f9" style="width:50px; height:50px; border-radius:50%; cursor:pointer;" onclick="selectAvatar(this.src)"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=3&backgroundColor=b6e3f4" style="width:50px; height:50px; border-radius:50%; cursor:pointer;" onclick="selectAvatar(this.src)"></div><button onclick="document.getElementById('fileInput').click()">从相册上传</button><button class="cancel" onclick="closeModal('albumModal')">取消</button><input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFileUpload(event)"></div>
+    <div class="modal-content">
+        <h3>选择头像</h3>
+        <div style="display:flex; justify-content:space-around; margin-bottom:15px;">
+            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=1&backgroundColor=ffdfbf" style="width:50px; height:50px; border-radius:50%; cursor:pointer;" onclick="selectAvatar(this.src)">
+            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=2&backgroundColor=d1d4f9" style="width:50px; height:50px; border-radius:50%; cursor:pointer;" onclick="selectAvatar(this.src)">
+            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=3&backgroundColor=b6e3f4" style="width:50px; height:50px; border-radius:50%; cursor:pointer;" onclick="selectAvatar(this.src)">
+        </div>
+        <div class="btn-row">
+            <button class="btn-save" onclick="document.getElementById('fileInput').click()">从相册上传</button>
+            <button class="btn-cancel" onclick="closeModal('albumModal')">取消</button>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFileUpload(event)">
+    </div>
 </div>
+
+<!-- 设置弹窗 -->
 <div class="modal-mask" id="settingsModal">
-    <div class="modal-content"><h3 style="margin-bottom:10px; font-size:16px;">关系设置</h3><input type="text" id="setRel" placeholder="关系（如：恋人）"><button onclick="saveSettings()">保存</button><button class="cancel" onclick="closeModal('settingsModal')">取消</button></div>
+    <div class="modal-content">
+        <h3>关系设置</h3>
+        <input type="text" id="setRel" placeholder="关系（如：恋人）">
+        <div class="btn-row">
+            <button class="btn-save" onclick="saveSettings()">保存</button>
+            <button class="btn-cancel" onclick="closeModal('settingsModal')">取消</button>
+        </div>
+    </div>
 </div>
+
 <script>
     const todayStr = new Date().toISOString().slice(0, 10);
     function getPartnerName() { return document.getElementById('namePartner').value.trim() || '他'; }
-    function updateDays() { const s = new Date('2026-09-18'), n = new Date(), d = Math.abs(n - s); document.getElementById('daysCount').textContent = Math.ceil(d / (1000 * 60 * 60 * 24)) + 1; }
-    updateDays();
     function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1800); }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     function flipWidget() { document.getElementById('coupleRow').classList.toggle('reversed'); }
-    let moyuExp = parseInt(localStorage.getItem('freya_moyu_exp') || '0');
-    document.getElementById('moyuDays').textContent = moyuExp;
-    function doCheckIn() { if (localStorage.getItem('freya_moyu_last') === todayStr) { showToast('今天已经打卡过啦~ 明天再来哦 ☕'); return; } moyuExp++; localStorage.setItem('freya_moyu_exp', moyuExp); localStorage.setItem('freya_moyu_last', todayStr); document.getElementById('moyuDays').textContent = moyuExp; showToast('摸鱼经验 +1 ✨'); }
+
+    // 头像与设置
     let currentAvatarTarget = 'user';
     function openAlbum(who) { currentAvatarTarget = who; document.getElementById('albumModal').style.display = 'flex'; }
     function selectAvatar(src) { document.getElementById(currentAvatarTarget === 'user' ? 'avatarUser' : 'avatarPartner').src = src; closeModal('albumModal'); }
     function handleFileUpload(e) { const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = ev => { document.getElementById(currentAvatarTarget === 'user' ? 'avatarUser' : 'avatarPartner').src = ev.target.result; closeModal('albumModal'); }; r.readAsDataURL(f); } }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     function openSettings() { document.getElementById('settingsModal').style.display = 'flex'; }
     function saveSettings() { const r = document.getElementById('setRel').value; if (r) document.getElementById('relBadge').textContent = r; closeModal('settingsModal'); }
-    let annList = JSON.parse(localStorage.getItem('freya_ann_list') || 'null') || [{ name: '和TA在一起', date: todayStr, type: 'countup' }, { name: '新年', date: '2027-01-01', type: 'countdown' }];
-    let currentAnnType = 'countdown';
-    function openAnnPage() { renderAnnList(); document.getElementById('annPage').style.display = 'flex'; }
-    function closeAnnPage() { document.getElementById('annPage').style.display = 'none'; document.getElementById('annAddForm').style.display = 'none'; document.getElementById('annListView').style.display = 'block'; }
-    function showAddAnnForm() { document.getElementById('annListView').style.display = 'none'; document.getElementById('annAddForm').style.display = 'flex'; }
-    function hideAddAnnForm() { document.getElementById('annListView').style.display = 'block'; document.getElementById('annAddForm').style.display = 'none'; }
-    function setAnnType(t) { currentAnnType = t; document.getElementById('btnCountdown').classList.toggle('active', t === 'countdown'); document.getElementById('btnCountup').classList.toggle('active', t === 'countup'); }
-    function saveNewAnn() { const n = document.getElementById('newAnnName').value.trim(), d = document.getElementById('newAnnDate').value; if (!n || !d) { showToast('名称和日期都要填哦'); return; } annList.push({ name: n, date: d, type: currentAnnType }); localStorage.setItem('freya_ann_list', JSON.stringify(annList)); hideAddAnnForm(); renderAnnList(); showToast('纪念日已添加 💕'); }
-    function renderAnnList() { const c = document.getElementById('annListContainer'); c.innerHTML = ''; const now = new Date(); let hr = false; annList.forEach(ann => { const d = new Date(ann.date), diff = Math.floor((now - d) / 86400000), days = Math.abs(diff); if (!hr) { document.getElementById('heroTitle').textContent = ann.name + (diff > 0 ? ' 已经' : ' 还有'); document.getElementById('heroDays').textContent = days; document.getElementById('heroSub').textContent = '目标日：' + ann.date; hr = true; } const div = document.createElement('div'); div.className = 'dm-item'; const up = diff > 0; div.innerHTML = `<span class="dm-item-name">${ann.name} ${up ? '已经' : '还有'}</span><span class="dm-item-days ${up ? 'countup' : 'countdown'}">${days} 天</span>`; c.appendChild(div); }); }
+
+    // ===== 核心：纪念日列表 + 互通桌面组件 =====
+    let annList = JSON.parse(localStorage.getItem('freya_ann_list') || 'null') || [
+        { id: 1, name: '和爱妻', date: '2026-09-18', cat: '爱情向' }
+    ];
+    let currentAnnTab = '爱情向', editingAnnId = null;
+    function saveAnnData() { localStorage.setItem('freya_ann_list', JSON.stringify(annList)); }
+    function getDaysDiff(dateStr) { const d = new Date(dateStr); const now = new Date(); return Math.floor((now - d) / 86400000); }
+
+    function openAnnPage() { renderAnnPage(); document.getElementById('annPage').style.display = 'flex'; }
+    function closeAnnPage() { document.getElementById('annPage').style.display = 'none'; }
+    function switchAnnTab(cat, el) { currentAnnTab = cat; document.querySelectorAll('.ann-tab').forEach(t => t.classList.remove('active')); el.classList.add('active'); renderAnnPage(); }
+
+    function renderAnnPage() {
+        const listContainer = document.getElementById('annListContainer');
+        listContainer.innerHTML = '';
+        const filtered = annList.filter(a => a.cat === currentAnnTab);
+        
+        if (filtered.length === 0) {
+            listContainer.innerHTML = '<div style="text-align:center;color:#bbb;margin-top:40px;">暂无记录</div>';
+        } else {
+            filtered.forEach(ann => {
+                const days = Math.abs(getDaysDiff(ann.date)) + 1; // +1 包含起始日
+                const card = document.createElement('div'); card.className = 'ann-item-card';
+                card.onclick = () => openEditAnnModal(ann.id);
+                card.innerHTML = `<div><div class="name">${ann.name}</div><div class="date">${ann.date.replace(/-/g, '.')} 起</div></div><div class="days">${days} 天</div>`;
+                listContainer.appendChild(card);
+            });
+        }
+        updateDesktopWidget();
+    }
+
+    function updateDesktopWidget() {
+        if (annList.length === 0) return;
+        // 默认取第一条作为桌面展示
+        const main = annList[0];
+        const days = Math.abs(getDaysDiff(main.date)) + 1; // +1 包含起始日
+        document.getElementById('widgetAnnTitle').textContent = main.name + (getDaysDiff(main.date) >= 0 ? ' 已经' : ' 还有');
+        document.getElementById('widgetAnnDays').innerHTML = days + ' <span>天</span>';
+        
+        // 同步桌面情侣小组件
+        document.getElementById('daysCount').textContent = days;
+        document.getElementById('startDateText').textContent = main.date.replace(/-/g, '.') + ' 起';
+    }
+
+    function openEditAnnModal(id) {
+        editingAnnId = id;
+        document.getElementById('annModalTitle').textContent = id ? '修改纪念日' : '添加纪念日';
+        document.getElementById('annDeleteBtn').style.display = id ? 'block' : 'none';
+        if (id) {
+            const ann = annList.find(a => a.id === id);
+            document.getElementById('editAnnName').value = ann.name;
+            document.getElementById('editAnnDate').value = ann.date;
+        } else {
+            document.getElementById('editAnnName').value = '';
+            document.getElementById('editAnnDate').value = todayStr;
+        }
+        document.getElementById('annEditModal').style.display = 'flex';
+    }
+
+    function saveEditAnn() {
+        const name = document.getElementById('editAnnName').value.trim();
+        const date = document.getElementById('editAnnDate').value;
+        if (!name || !date) { showToast('名称和日期都要填哦'); return; }
+        if (editingAnnId) { 
+            const ann = annList.find(a => a.id === editingAnnId); 
+            ann.name = name; ann.date = date; 
+            showToast('已保存修改 ✅'); 
+        } else { 
+            annList.push({ id: Date.now(), name: name, date: date, cat: currentAnnTab }); 
+            showToast('纪念日已添加 💕'); 
+        }
+        saveAnnData(); closeModal('annEditModal'); renderAnnPage();
+    }
+
+    function deleteEditAnn() {
+        if (!editingAnnId) return;
+        annList = annList.filter(a => a.id !== editingAnnId);
+        saveAnnData(); closeModal('annEditModal'); renderAnnPage();
+        showToast('已删除 🗑️');
+    }
+
+    // 摸鱼打卡
+    let moyuExp = parseInt(localStorage.getItem('freya_moyu_exp') || '0');
+    document.getElementById('moyuDays').textContent = moyuExp;
+    function doCheckIn() { if (localStorage.getItem('freya_moyu_last') === todayStr) { showToast('今天已经打卡过啦~ 明天再来哦 ☕'); return; } moyuExp++; localStorage.setItem('freya_moyu_exp', moyuExp); localStorage.setItem('freya_moyu_last', todayStr); document.getElementById('moyuDays').textContent = moyuExp; showToast('摸鱼经验 +1 ✨'); }
+        // 邮局逻辑
     const letterQuotes = ["见字如面，纸短情长。","展信舒颜，顺问冬安。","云中谁寄锦书来，雁字回时，月满西楼。","从前车马很慢，书信很远，一生只够爱一个人。","见字如晤，声息可辨。","提笔千言，落笔是你。","山海自有归期，风雨自有相逢。","一封书信，半世流离。"];
     let letters = JSON.parse(localStorage.getItem('freya_letters') || '[]');
     let currentInboxTab = 'received';
@@ -277,7 +411,8 @@ body { display: flex; justify-content: center; align-items: center; min-height: 
     function showTopLetterTip() { const tip = document.getElementById('letterTopTip'); tip.textContent = letterQuotes[Math.floor(Math.random() * letterQuotes.length)]; tip.classList.add('show'); setTimeout(() => tip.classList.remove('show'), 2500); }
     function sendLetter() { const c = document.getElementById('writeContent').value.trim(); if (!c) { showToast('信还没写内容呢~'); return; } const now = new Date(); letters.unshift({ from: '我', to: getPartnerName(), content: c, time: (now.getMonth()+1)+'月'+now.getDate()+'日 '+now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0'), isNew: false }); localStorage.setItem('freya_letters', JSON.stringify(letters)); showToast('信件已封存寄出 ✉️'); closeWritePage(); }
     function renderInbox() { const list = document.getElementById('inboxList'); list.innerHTML = ''; const p = getPartnerName(); let displayLetters = letters.filter(l => currentInboxTab === 'received' ? l.from !== '我' : l.from === '我'); if (displayLetters.length === 0) { list.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:80px;">${currentInboxTab === 'received' ? p + '还未给你写信' : '你还没有给' + p + '写信'}</div>`; return; } displayLetters.forEach(l => { const card = document.createElement('div'); card.className = 'letter-card'; card.onclick = () => showToast('拆开信件功能开发中...'); let f = (l.from === 'TA' || !l.from) ? p : l.from; card.innerHTML = `<div class="letter-avatar">✉️</div><div class="letter-info"><div class="letter-title">来自 ${f} ${l.isNew ? '<span class="letter-badge">暂未查看</span>' : ''}</div><div class="letter-preview">${l.content}</div></div><div class="letter-time">${l.time}</div>`; list.appendChild(card); }); }
-        // 经期
+
+    // 经期
     let periodStart = localStorage.getItem('freya_period_start');
     function openPeriodPage() { renderCalendar(); document.getElementById('periodPage').style.display = 'flex'; }
     function closePeriodPage() { document.getElementById('periodPage').style.display = 'none'; }
@@ -285,7 +420,7 @@ body { display: flex; justify-content: center; align-items: center; min-height: 
     function recordPeriodEnd() { showToast('已记录今天 📝'); }
     function renderCalendar() { const grid = document.getElementById('calendarGrid'); grid.innerHTML = ''; ['日','一','二','三','四','五','六'].forEach(d => { const div = document.createElement('div'); div.className = 'calendar-day-label'; div.textContent = d; grid.appendChild(div); }); const now = new Date(), year = now.getFullYear(), month = now.getMonth(); const firstDay = new Date(year, month, 1).getDay(), daysInMonth = new Date(year, month + 1, 0).getDate(); for (let i = 0; i < firstDay; i++) { grid.innerHTML += '<div></div>'; } for (let d = 1; d <= daysInMonth; d++) { const div = document.createElement('div'); div.className = 'calendar-day'; div.textContent = d; const dateStr = `${year}-${(month+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`; if (dateStr === todayStr) div.classList.add('today'); if (periodStart) { const ps = new Date(periodStart), pd = new Date(periodStart); pd.setDate(pd.getDate() + 5); if (new Date(dateStr) >= ps && new Date(dateStr) <= pd) div.classList.add('active'); } div.onclick = () => { periodStart = dateStr; localStorage.setItem('freya_period_start', periodStart); renderCalendar(); showToast('已标记 🩸'); }; grid.appendChild(div); } if (periodStart) { const start = new Date(periodStart); const diff = Math.floor((new Date() - start) / 86400000); document.getElementById('periodStatusText').textContent = '经期第 ' + (diff + 1) + ' 天'; document.getElementById('periodStatusSub').textContent = '预计下次：' + (28 - (diff % 28)) + ' 天后'; } }
 
-    // 占卜（优化后）
+    // 占卜 (样式修复版)
     const tarotCards = ['愚者','魔术师','女祭司','女皇','皇帝','教皇','恋人','战车','力量','隐士','命运之轮','正义','倒吊人','死神','节制','恶魔','高塔','星星','月亮','太阳','审判','世界','权杖一','权杖二','权杖三','权杖四','权杖五','权杖六','权杖七','权杖八','权杖九','权杖十','权杖侍从','权杖骑士','权杖皇后','权杖国王','圣杯一','圣杯二','圣杯三','圣杯四','圣杯五','圣杯六','圣杯七','圣杯八','圣杯九','圣杯十','圣杯侍从','圣杯骑士','圣杯皇后','圣杯国王','宝剑一','宝剑二','宝剑三','宝剑四','宝剑五','宝剑六','宝剑七','宝剑八','宝剑九','宝剑十','宝剑侍从','宝剑骑士','宝剑皇后','宝剑国王','星币一','星币二','星币三','星币四','星币五','星币六','星币七','星币八','星币九','星币十','星币侍从','星币骑士','星币皇后','星币国王'];
     const lenormandCards = ['骑士','三叶草','船','房子','树','云','蛇','棺材','花束','镰刀','鞭子','鸟','小孩','狐狸','熊','星星','鹳','狗','塔','花园','山','十字路口','老鼠','心','戒指','书','信','男人','女人','百合','太阳','月亮','钥匙','鱼','锚','十字架'];
     let currentFortuneType = 'tarot', currentCardCount = 1, currentTarget = 'none', currentDeck = [], drawnCards = [];
@@ -311,10 +446,14 @@ body { display: flex; justify-content: center; align-items: center; min-height: 
     function clearMemo() { memos = []; localStorage.setItem('freya_memos', JSON.stringify(memos)); renderMemos(); showToast('已清空数据 🧹'); }
     function toggleTag(el) { el.classList.toggle('active'); }
 
-    setInterval(() => { const n = new Date(); document.getElementById('clock').textContent = n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0'); }, 1000);
-    const wallpapers = ['#FDF9F1', 'linear-gradient(135deg, #FDEBEC, #E6E9F0)', 'linear-gradient(135deg, #E0F2F1, #FCE4EC)', 'linear-gradient(135deg, #FFF3E0, #F3E5F5)'];
-    let wallIndex = 0;
+    // 时钟和日期
+    function updateTime() { const n = new Date(); document.getElementById('clock').textContent = n.getHours().toString().padStart(2,'0') + ':' + n.getMinutes().toString().padStart(2,'0'); const days = ['周日','周一','周二','周三','周四','周五','周六']; document.getElementById('dateText').textContent = (n.getMonth()+1) + '月' + n.getDate() + '日 ' + days[n.getDay()]; }
+    updateTime(); setInterval(updateTime, 10000);
+    const wallpapers = ['#FDF9F1', 'linear-gradient(135deg, #FDEBEC, #E6E9F0)', 'linear-gradient(135deg, #E0F2F1, #FCE4EC)', 'linear-gradient(135deg, #FFF3E0, #F3E5F5)']; let wallIndex = 0;
     function changeWallpaper() { wallIndex = (wallIndex + 1) % wallpapers.length; document.getElementById('phone').style.background = wallpapers[wallIndex]; }
+
+    // 初始化同步
+    renderAnnPage();
 </script>
 </body>
 </html>
