@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Freya - 桌面</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #e0e0e0; overflow: hidden; }
+.phone-mockup { width: 375px; height: 812px; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; overflow: hidden; display: flex; flex-direction: column; border: 8px solid #fff; background: var(--wallpaper, #FDF9F1); transition: background 0.3s ease; }
+.status-bar { height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; font-size: 14px; font-weight: 600; color: #333; z-index: 10; }
+.status-right { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.widget { margin: 10px 20px; padding: 18px; background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border-radius: 30px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 8px 30px rgba(0,0,0,0.04); border: 1px solid rgba(255,255,255,0.8); }
+.couple-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; transition: all 0.3s ease; }
+.couple-row.reversed { flex-direction: row-reverse; }
+.avatar-container { width: 58px; height: 58px; border-radius: 50%; background: #fff; padding: 3px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer; overflow: hidden; }
+.avatar-container img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.relationship-badge { font-size: 11px; background: #FFE4E8; color: #FF6B81; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; font-weight: 600; }
+.heart-icon { font-size: 16px; color: #FF8C9A; cursor: pointer; }
+.nicknames { display: flex; gap: 30px; font-size: 14px; font-weight: 600; color: #4A4A4A; }
+.nickname { cursor: text; border: none; background: transparent; text-align: center; width: 70px; font-size: 14px; font-weight: 600; color: #4A4A4A; outline: none; padding: 4px 6px; border-radius: 8px; font-family: inherit; }
+.nickname:focus { background: #FFE4E8; }
+.love-days { margin-top: 12px; text-align: center; width: 100%; }
+.days-count { font-size: 26px; font-weight: 800; color: #FF8C9A; }
+.days-text { font-size: 11px; color: #888; margin-left: 4px; }
+.settings-icon { position: absolute; top: 55px; right: 24px; font-size: 18px; cursor: pointer; z-index: 20; color: #888; }
+.moyu-widget { margin: 0 20px 15px 20px; padding: 15px 20px; background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border-radius: 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 30px rgba(0,0,0,0.04); border: 1px solid rgba(255,255,255,0.8); cursor: pointer; }
+.moyu-info { display: flex; flex-direction: column; }
+.moyu-title { font-size: 13px; color: #666; font-weight: 600; }
+.moyu-days { font-size: 26px; font-weight: 800; color: #4A4A4A; margin-top: 2px; }
+.moyu-days span { font-size: 14px; color: #888; font-weight: 500; }
+.moyu-icon { width: 60px; height: 60px; background: #E0E0E0; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 32px; }
+.toast { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%) scale(0.8); background: rgba(0,0,0,0.78); color: white; padding: 12px 24px; border-radius: 20px; font-size: 13px; z-index: 9999; opacity: 0; transition: all 0.3s ease; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.app-grid { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px 10px; padding: 15px 16px; align-content: flex-start; overflow-y: auto; }
+.app-item { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
+.app-icon { width: 52px; height: 52px; background: rgba(255,255,255,0.8); border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.app-name { font-size: 10px; color: #555; font-weight: 500; }
+.dock { height: 80px; margin: 0 16px 20px 16px; background: rgba(255,255,255,0.6); backdrop-filter: blur(15px); border-radius: 30px; display: flex; justify-content: space-around; align-items: center; padding: 0 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.06); }
+.full-page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #FDF9F1; z-index: 200; display: none; flex-direction: column; }
+.page-header { height: 56px; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; background: #fff; border-bottom: 1px solid #eee; flex-shrink: 0; }
+.page-title { font-size: 16px; font-weight: 600; color: #333; }
+.back-btn, .add-btn { font-size: 20px; color: #FF8C9A; cursor: pointer; width: 40px; text-align: center; }
+.modal-mask { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 9999; border-radius: 32px; }
+.modal-content { background: #fff; width: 82%; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+.modal-content input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #eee; border-radius: 10px; outline: none; font-size: 14px; }
+.modal-content button { padding: 8px 20px; margin: 5px; border: none; border-radius: 15px; background: #FF8C9A; color: white; font-weight: 600; cursor: pointer; }
+.modal-content button.cancel { background: #eee; color: #666; }
+.dm-hero { padding: 30px 20px; background: #fff; text-align: center; border-bottom: 1px solid #f0f0f0; }
+.dm-hero-title { font-size: 14px; color: #888; }
+.dm-hero-days { font-size: 64px; font-weight: 800; color: #333; line-height: 1.1; margin: 8px 0; }
+.dm-hero-sub { font-size: 12px; color: #aaa; }
+.dm-list { flex: 1; overflow-y: auto; padding: 16px; }
+.dm-item { background: #fff; border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+.dm-item-name { font-size: 15px; color: #444; font-weight: 600; }
+.dm-item-days { font-size: 18px; font-weight: 800; padding: 6px 12px; border-radius: 10px; color: #fff; }
+.dm-item-days.countdown { background: #4DA6FF; }
+.dm-item-days.countup { background: #FF9F43; }
+.dm-form { padding: 20px; display: none; flex-direction: column; gap: 16px; }
+.dm-form input { padding: 14px; border: 1px solid #eee; border-radius: 12px; font-size: 15px; outline: none; }
+.dm-form .type-switch { display: flex; gap: 10px; }
+.dm-form .type-switch button { flex: 1; padding: 12px; border: 1px solid #eee; background: #fff; border-radius: 12px; font-size: 14px; cursor: pointer; }
+.dm-form .type-switch button.active { background: #FFE4E8; color: #FF6B81; border-color: #FFB6C1; font-weight: 600; }
+.dm-form .save-btn { padding: 14px; background: #FF8C9A; color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+#postPage { background: #F4ECD8; }
+#postPage .page-header { background: #F4ECD8; border-bottom: 1px solid #E3D5B8; }
+#postPage .page-title { color: #5D4037; }
+.post-content { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 30px; padding: 40px 20px; }
+.post-card { width: 100%; background: #FFF; border-radius: 20px; padding: 30px 20px; display: flex; flex-direction: column; align-items: center; gap: 12px; box-shadow: 0 10px 25px rgba(93, 64, 55, 0.1); cursor: pointer; border: 1px solid #EEDFC8; position: relative; overflow: hidden; }
+.post-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: #D4A373; }
+.post-icon { font-size: 48px; }
+.post-title { font-size: 20px; font-weight: 700; color: #5D4037; }
+.post-desc { font-size: 12px; color: #A1887F; }
+.post-badge { position: absolute; top: 15px; right: 15px; background: #FF8C9A; color: white; font-size: 10px; padding: 2px 8px; border-radius: 10px; }
+#writePage, #inboxPage { background: #fff; }
+.write-toolbar { padding: 10px 16px; display: flex; gap: 15px; border-bottom: 1px solid #f0f0f0; flex-shrink: 0; }
+.write-toolbar .tool-icon { width: 36px; height: 36px; border-radius: 50%; border: 1px solid #eee; display: flex; justify-content: center; align-items: center; font-size: 18px; color: #666; cursor: pointer; }
+.write-hint { font-size: 12px; color: #999; padding: 10px 16px; line-height: 1.4; background: #fbfbfb; flex-shrink: 0; }
+.write-textarea { flex: 1; border: none; padding: 16px 16px 100px 16px; font-size: 16px; line-height: 1.8; outline: none; resize: none; font-family: inherit; color: #333; min-height: 0; }
+.write-footer { position: absolute; bottom: 0; left: 0; width: 100%; padding: 16px; background: #fff; border-top: 1px solid #f0f0f0; box-sizing: border-box; z-index: 10; box-shadow: 0 -4px 12px rgba(0,0,0,0.03); }
+.write-footer button { width: 100%; padding: 16px; background: #1A1A1A; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; letter-spacing: 2px; }
+.inbox-tabs { display: flex; gap: 8px; padding: 12px 16px; overflow-x: auto; background: #fff; flex-shrink: 0; }
+.inbox-tabs .tab { padding: 6px 14px; background: #f5f5f5; border-radius: 20px; font-size: 13px; color: #666; white-space: nowrap; cursor: pointer; }
+.inbox-tabs .tab.active { background: #1A1A1A; color: #fff; font-weight: 600; }
+.inbox-list { flex: 1; overflow-y: auto; padding: 0 16px 20px 16px; background: #fafafa; }
+.letter-card { background: #fff; border-radius: 16px; padding: 16px; margin-top: 12px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); cursor: pointer; }
+.letter-avatar { width: 44px; height: 44px; background: #f0f0f0; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px; color: #999; flex-shrink: 0; }
+.letter-info { flex: 1; overflow: hidden; }
+.letter-title { font-size: 14px; font-weight: 700; color: #333; display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.letter-badge { background: #FF8C9A; color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 6px; font-weight: 500; }
+.letter-preview { font-size: 13px; color: #999; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.letter-time { font-size: 11px; color: #bbb; text-align: right; flex-shrink: 0; }
+.letter-top-tip { position: absolute; top: 60px; left: 50%; transform: translateX(-50%) translateY(-10px); background: rgba(93, 64, 55, 0.9); color: #F4ECD8; padding: 8px 18px; border-radius: 20px; font-size: 12px; z-index: 9999; opacity: 0; transition: all 0.4s ease; pointer-events: none; white-space: nowrap; }
+.letter-top-tip.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#periodPage { background: #FDFBFB; }
+.period-main { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+.period-card { background: #fff; border-radius: 24px; padding: 24px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); border: 1px solid #F5EBEB; }
+.period-status { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+.period-circle { width: 70px; height: 70px; border-radius: 50%; background: #FCE4E4; display: flex; justify-content: center; align-items: center; font-size: 32px; color: #E85D75; }
+.period-text h3 { font-size: 22px; color: #333; margin-bottom: 4px; }
+.period-text p { font-size: 13px; color: #999; }
+.period-btns { display: flex; gap: 12px; margin-bottom: 20px; }
+.period-btns button { flex: 1; padding: 14px; border: none; border-radius: 16px; font-size: 15px; font-weight: 600; cursor: pointer; }
+.btn-period-start { background: #E85D75; color: white; }
+.btn-period-record { background: #FDF5F5; color: #E85D75; border: 1px solid #FCE4E4; }
+.calendar-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; font-size: 16px; font-weight: 600; }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; }
+.calendar-day-label { font-size: 12px; color: #999; padding: 8px 0; }
+.calendar-day { padding: 10px 0; font-size: 14px; border-radius: 12px; cursor: pointer; }
+.calendar-day.active { background: #E85D75; color: white; font-weight: bold; }
+.calendar-day.today { border: 2px solid #333; }
+.calendar-legend { display: flex; gap: 15px; font-size: 12px; color: #888; margin-top: 15px; }
+.dot-period { width: 8px; height: 8px; background: #E85D75; border-radius: 50%; }
+.dot-ovulation { width: 8px; height: 8px; background: #F5C26B; border-radius: 50%; }
+#fortunePage { background: #F9F9F9; flex-direction: column; overflow: hidden; }
+.fortune-tabs { display: flex; gap: 10px; padding: 15px 20px 10px; flex-shrink: 0; }
+.fortune-tabs .tab { flex: 1; padding: 12px; background: #fff; border-radius: 12px; text-align: center; font-size: 14px; color: #666; cursor: pointer; border: 1px solid #eee; }
+.fortune-tabs .tab.active { background: #1A1A1A; color: #fff; border-color: #1A1A1A; }
+.fortune-options { padding: 0 20px 10px; flex-shrink: 0; }
+.fortune-options .row { display: flex; gap: 10px; margin-bottom: 10px; }
+.fortune-options .chip { padding: 8px 16px; border-radius: 20px; background: #fff; border: 1px solid #eee; font-size: 13px; cursor: pointer; }
+.fortune-options .chip.active { background: #1A1A1A; color: #fff; }
+.fortune-question { padding: 0 20px 10px; flex-shrink: 0; }
+.fortune-question input { width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 16px; font-size: 14px; outline: none; }
+.fortune-action { padding: 0 20px 10px; flex-shrink: 0; }
+.fortune-action button { width: 100%; padding: 16px; background: #1A1A1A; color: #fff; border: none; border-radius: 18px; font-size: 16px; font-weight: 700; cursor: pointer; transition: background 0.3s; }
+#shuffleStage { flex: 1; position: relative; display: none; flex-direction: column; justify-content: center; overflow: hidden; background: #F9F9F9; }
+#cardPool { flex: 1; width: 100%; display: flex; align-items: center; overflow-x: auto; padding: 0 40px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
+#cardPool::-webkit-scrollbar { display: none; }
+.playing-card { width: 80px; height: 136px; perspective: 1000px; flex-shrink: 0; scroll-snap-align: center; position: relative; margin-right: -30px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.playing-card.flipped { transform: translateY(-20px); }
+.card-inner { width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; position: relative; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+.playing-card.flipped .card-inner { transform: rotateY(180deg); }
+.card-front, .card-back { width: 100%; height: 100%; position: absolute; backface-visibility: hidden; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+.card-back { background: linear-gradient(135deg, #2E2B4D, #4B486F); color: white; font-size: 20px; }
+.card-front { background: #fff; color: #333; transform: rotateY(180deg); border: 1px solid #ddd; font-size: 13px; padding: 6px; text-align: center; word-break: break-all; }
+.fortune-results { flex: 1; overflow-y: auto; padding: 20px; background: #F9F9F9; display: none; }
+.card-result { background: #fff; border-radius: 20px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+.card-result h4 { font-size: 16px; margin-bottom: 8px; color: #333; }
+#memoPage { background: #FDFBFB; }
+.memo-input-area { padding: 20px; display: flex; gap: 10px; }
+.memo-input-area input { flex: 1; padding: 14px; border: 1px solid #eee; border-radius: 14px; font-size: 14px; outline: none; }
+.memo-input-area button { padding: 0 20px; background: #1A1A1A; color: #fff; border: none; border-radius: 14px; font-weight: 600; cursor: pointer; }
+.memo-tags { display: flex; gap: 8px; padding: 0 20px 15px; flex-wrap: wrap; }
+.memo-tags .tag { padding: 6px 14px; border-radius: 20px; background: #F5F5F5; font-size: 12px; color: #666; cursor: pointer; }
+.memo-tags .tag.active { background: #4DA6FF; color: #fff; }
+.memo-list { flex: 1; overflow-y: auto; padding: 0 20px 20px; }
+.memo-item { background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #f0f0f0; }
+.memo-item p { font-size: 14px; color: #333; }
+.memo-item .del-btn { color: #FF8C9A; cursor: pointer; font-size: 16px; }
+.memo-footer { padding: 15px 20px; background: #fff; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; font-size: 13px; color: #888; }
+</style>
+</head>
+<body>
+<div class="phone-mockup" id="phone">
+    <div class="status-bar"><span>Freya</span><span id="clock">16:54</span><div class="status-right"><span>📶</span><span>🔋</span></div></div>
+    <div class="settings-icon" onclick="openSettings()">⚙️</div>
+    <div class="widget">
+        <div class="relationship-badge" id="relBadge" onclick="openSettings()">恋人</div>
+        <div class="couple-row" id="coupleRow">
+            <div class="avatar-container" onclick="openAlbum('user')"><img id="avatarUser" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Me&backgroundColor=ffdfbf"></div>
+            <div class="heart-icon" onclick="flipWidget()">❤️</div>
+            <div class="avatar-container" onclick="openAlbum('partner')"><img id="avatarPartner" src="https://api.dicebear.com/7.x/adventurer/svg?seed=TA&backgroundColor=d1d4f9"></div>
+        </div>
+        <div class="nicknames"><input class="nickname" id="nameUser" value="我" maxlength="8"><input class="nickname" id="namePartner" value="TA" maxlength="8"></div>
+        <div class="love-days"><span class="days-count" id="daysCount">0</span><span class="days-text">天</span><div class="days-text" id="startDateText">2026.09.18 起</div></div>
+    </div>
+    <div class="moyu-widget" id="moyuWidget" onclick="doCheckIn()">
+        <div class="moyu-info"><span class="moyu-title">已摸鱼</span><span class="moyu-days"><span id="moyuDays">0</span> 天</span></div>
+        <div class="moyu-icon">🥸</div>
+    </div>
+    <div class="app-grid">
+        <div class="app-item" onclick="alert('聊天页面开发中...')"><div class="app-icon">💬</div><span class="app-name">聊天</span></div>
+        <div class="app-item" onclick="alert('主页开发中...')"><div class="app-icon">⭐</div><span class="app-name">主页</span></div>
+        <div class="app-item" onclick="openPostPage()"><div class="app-icon">✉️</div><span class="app-name">邮局</span></div>
+        <div class="app-item" onclick="alert('朋友圈开发中...')"><div class="app-icon">🖤</div><span class="app-name">朋友圈</span></div>
+        <div class="app-item" onclick="openAnnPage()"><div class="app-icon">📅</div><span class="app-name">纪念日</span></div>
+        <div class="app-item" onclick="alert('音乐播放器开发中...')"><div class="app-icon">🎵</div><span class="app-name">音乐</span></div>
+        <div class="app-item" onclick="openPeriodPage()"><div class="app-icon">🩸</div><span class="app-name">经期</span></div>
+        <div class="app-item" onclick="openFortunePage()"><div class="app-icon">🔮</div><span class="app-name">占卜</span></div>
+        <div class="app-item" onclick="openMemoPage()"><div class="app-icon">📝</div><span class="app-name">备忘录</span></div>
+    </div>
+    <div class="dock"><div class="app-item"><div class="app-icon">📱</div></div><div class="app-item" onclick="changeWallpaper()"><div class="app-icon">🖼️</div></div><div class="app-item"><div class="app-icon">⚙️</div></div></div>
+    <div class="toast" id="toast"></div>
+    <!-- 纪念日 -->
+<div class="full-page" id="annPage">
+    <div class="page-header"><div class="back-btn" onclick="closeAnnPage()">←</div><div class="page-title">Days Matter · 纪念日</div><div class="add-btn" onclick="showAddAnnForm()">＋</div></div>
+    <div id="annListView"><div class="dm-hero"><div class="dm-hero-title" id="heroTitle">距离 新年 还有</div><div class="dm-hero-days" id="heroDays">101</div><div class="dm-hero-sub" id="heroSub">目标日：2027-1-1 星期五</div></div><div class="dm-list" id="annListContainer"></div></div>
+    <div class="dm-form" id="annAddForm"><input type="text" id="newAnnName" placeholder="输入事件名称（如：和夏老师）" maxlength="12"><input type="date" id="newAnnDate"><div style="font-size:13px; color:#888; margin-top:-8px;">选择目标日（未来为倒数，过去为正数）</div><div class="type-switch"><button class="active" onclick="setAnnType('countdown')" id="btnCountdown">倒数（未来）</button><button onclick="setAnnType('countup')" id="btnCountup">正数（过去）</button></div><button class="save-btn" onclick="saveNewAnn()">保存</button><button class="save-btn" style="background:#eee; color:#666; margin-top:0;" onclick="hideAddAnnForm()">取消</button></div>
+</div>
+<!-- 邮局 -->
+<div class="full-page" id="postPage">
+    <div class="page-header"><div class="back-btn" onclick="closePostPage()">←</div><div class="page-title">邮局</div><div style="width:40px;"></div></div>
+    <div class="post-content"><div class="post-card" onclick="openWritePage()"><div class="post-icon">🖋️</div><div class="post-title">提笔写信</div><div class="post-desc">把想说的话，慢慢写进信里</div></div><div class="post-card" onclick="openInboxPage()"><div class="post-icon">📨</div><div class="post-title">查看来信</div><div class="post-desc">来自远方的思念，正在等你拆开</div><div class="post-badge" id="unreadBadge" style="display:none;">0 封未读</div></div></div>
+</div>
+<!-- 写信 -->
+<div class="full-page" id="writePage">
+    <div class="page-header"><div class="back-btn" onclick="closeWritePage()">←</div><div class="page-title" id="writeTitle">写信 · 给 TA</div><div style="width:40px;"></div></div>
+    <div class="write-toolbar"><div class="tool-icon">😊</div><div class="tool-icon">🖼️</div></div>
+    <div class="write-hint">写完后点击“封·寄出”就可以了（提示语会在上方几秒后自动消失，不挡正文）</div>
+    <textarea class="write-textarea" id="writeContent" placeholder="亲爱的，&#10;&#10;今天想跟你说..."></textarea>
+    <div class="write-footer"><button onclick="sendLetter()">封 · 寄出</button></div>
+</div>
+<!-- 收信 -->
+<div class="full-page" id="inboxPage">
+    <div class="page-header"><div class="back-btn" onclick="closeInboxPage()">←</div><div class="page-title">信箱</div><div style="width:40px;"></div></div>
+    <div class="inbox-tabs"><div class="tab active" onclick="switchInboxTab('received', this)">收到的信</div><div class="tab" onclick="switchInboxTab('sent', this)">寄出的信</div><div class="tab" onclick="openWritePage()">写封信</div><div class="tab" onclick="showToast('数据管理功能开发中')">信件数据</div></div>
+    <div class="inbox-list" id="inboxList"></div>
+</div>
+<div class="letter-top-tip" id="letterTopTip"></div>
+<!-- 经期 -->
+<div class="full-page" id="periodPage">
+    <div class="page-header"><div class="back-btn" onclick="closePeriodPage()">←</div><div class="page-title">经期记录</div><div style="width:40px;"></div></div>
+    <div class="period-main"><div class="period-card"><div class="period-status"><div class="period-circle">🩸</div><div class="period-text"><h3 id="periodStatusText">暂无记录</h3><p id="periodStatusSub">点下方按钮标记本次经期开始</p></div></div><div class="period-btns"><button class="btn-period-start" onclick="recordPeriodStart()">标记今天开始</button><button class="btn-period-record" onclick="recordPeriodEnd()">记录今天</button></div><div class="calendar-header"><span>本月日历</span><span>◀ ▶</span></div><div class="calendar-grid" id="calendarGrid"></div><div class="calendar-legend"><span><div class="dot-period"></div>经期</span><span><div class="dot-ovulation"></div>排卵期</span></div></div></div>
+</div>
+<!-- 占卜 -->
+<div class="full-page" id="fortunePage">
+    <div class="page-header"><div class="back-btn" onclick="closeFortunePage()">←</div><div class="page-title">占卜</div><div style="width:40px;"></div></div>
+    <div class="fortune-tabs"><div class="tab active" onclick="selectFortuneType(this,'tarot')">塔罗</div><div class="tab" onclick="selectFortuneType(this,'lenormand')">雷诺曼</div></div>
+    <div class="fortune-options"><div class="row"><div class="chip active" onclick="selectCardCount(this,1)">1 张</div><div class="chip" onclick="selectCardCount(this,3)">3 张</div><div class="chip" onclick="selectCardCount(this,7)">7 张</div></div><div class="row"><div class="chip active" onclick="selectTarget(this,'none')">不选</div><div class="chip" onclick="selectTarget(this,'TA')">TA</div></div></div>
+    <div class="fortune-question"><input type="text" id="fortuneQuestion" placeholder="写下你的问题（可选）"></div>
+    <div class="fortune-action"><button id="drawBtn" onclick="startShuffle()">🎴 开始洗牌</button></div>
+    <div id="shuffleStage"><div style="text-align:center; font-size:13px; color:#888; padding:10px;" id="cardStatusText">正在洗牌...</div><div id="cardPool"></div><div id="shuffleCompleteBtn" style="padding:10px 20px 20px; width:100%; display:none;"><button onclick="reShuffleCards()" style="width:100%; padding:14px; background:#eee; color:#666; border:none; border-radius:14px; font-size:15px; font-weight:600; cursor:pointer;">🔄 重新洗牌</button></div></div>
+    <div class="fortune-results" id="fortuneResults"></div>
+</div>
+<!-- 备忘录 -->
+<div class="full-page" id="memoPage">
+    <div class="page-header"><div class="back-btn" onclick="closeMemoPage()">←</div><div class="page-title">备忘录</div><div style="width:40px;"></div></div>
+    <div class="memo-input-area"><input type="text" id="memoInput" placeholder="记一件想做的事..."><button onclick="addMemo()">添加</button></div>
+    <div class="memo-tags"><div class="tag active" onclick="toggleTag(this)">聊天概率</div><div class="tag" onclick="toggleTag(this)">到点弹窗</div><div class="tag" onclick="toggleTag(this)">联系人弹窗</div></div>
+    <div class="memo-list" id="memoList"></div>
+    <div class="memo-footer"><span>共 <span id="memoCount">0</span> 项</span><span style="cursor:pointer;" onclick="clearMemo()">清空数据</span></div>
+</div>
+<!-- 弹窗 -->
+<div class="modal-mask" id="albumModal">
+    <div class="modal-content"><h3 style="margin-bottom:10px; font-size:16px;">选择头像</h3><div style="display:flex; justify-content:space-around; margin-bottom:15px;"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=1&backgroundColor=ffdfbf" style="width:50px; height:50px; border-radius:50%; cursor:pointer;" onclick="selectAvatar(this.src)"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=2&backgroundColor=d1d4f9" style="width:50px; height:50px; border-radius:50%; cursor:pointer;" onclick="selectAvatar(this.src)"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=3&backgroundColor=b6e3f4" style="width:50px; height:50px; border-radius:50%; cursor:pointer;" onclick="selectAvatar(this.src)"></div><button onclick="document.getElementById('fileInput').click()">从相册上传</button><button class="cancel" onclick="closeModal('albumModal')">取消</button><input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFileUpload(event)"></div>
+</div>
+<div class="modal-mask" id="settingsModal">
+    <div class="modal-content"><h3 style="margin-bottom:10px; font-size:16px;">关系设置</h3><input type="text" id="setRel" placeholder="关系（如：恋人）"><button onclick="saveSettings()">保存</button><button class="cancel" onclick="closeModal('settingsModal')">取消</button></div>
+</div>
+<script>
+    const todayStr = new Date().toISOString().slice(0, 10);
+    function getPartnerName() { return document.getElementById('namePartner').value.trim() || '他'; }
+    function updateDays() { const s = new Date('2026-09-18'), n = new Date(), d = Math.abs(n - s); document.getElementById('daysCount').textContent = Math.ceil(d / (1000 * 60 * 60 * 24)) + 1; }
+    updateDays();
+    function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1800); }
+    function flipWidget() { document.getElementById('coupleRow').classList.toggle('reversed'); }
+    let moyuExp = parseInt(localStorage.getItem('freya_moyu_exp') || '0');
+    document.getElementById('moyuDays').textContent = moyuExp;
+    function doCheckIn() { if (localStorage.getItem('freya_moyu_last') === todayStr) { showToast('今天已经打卡过啦~ 明天再来哦 ☕'); return; } moyuExp++; localStorage.setItem('freya_moyu_exp', moyuExp); localStorage.setItem('freya_moyu_last', todayStr); document.getElementById('moyuDays').textContent = moyuExp; showToast('摸鱼经验 +1 ✨'); }
+    let currentAvatarTarget = 'user';
+    function openAlbum(who) { currentAvatarTarget = who; document.getElementById('albumModal').style.display = 'flex'; }
+    function selectAvatar(src) { document.getElementById(currentAvatarTarget === 'user' ? 'avatarUser' : 'avatarPartner').src = src; closeModal('albumModal'); }
+    function handleFileUpload(e) { const f = e.target.files[0]; if (f) { const r = new FileReader(); r.onload = ev => { document.getElementById(currentAvatarTarget === 'user' ? 'avatarUser' : 'avatarPartner').src = ev.target.result; closeModal('albumModal'); }; r.readAsDataURL(f); } }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    function openSettings() { document.getElementById('settingsModal').style.display = 'flex'; }
+    function saveSettings() { const r = document.getElementById('setRel').value; if (r) document.getElementById('relBadge').textContent = r; closeModal('settingsModal'); }
+    let annList = JSON.parse(localStorage.getItem('freya_ann_list') || 'null') || [{ name: '和TA在一起', date: todayStr, type: 'countup' }, { name: '新年', date: '2027-01-01', type: 'countdown' }];
+    let currentAnnType = 'countdown';
+    function openAnnPage() { renderAnnList(); document.getElementById('annPage').style.display = 'flex'; }
+    function closeAnnPage() { document.getElementById('annPage').style.display = 'none'; document.getElementById('annAddForm').style.display = 'none'; document.getElementById('annListView').style.display = 'block'; }
+    function showAddAnnForm() { document.getElementById('annListView').style.display = 'none'; document.getElementById('annAddForm').style.display = 'flex'; }
+    function hideAddAnnForm() { document.getElementById('annListView').style.display = 'block'; document.getElementById('annAddForm').style.display = 'none'; }
+    function setAnnType(t) { currentAnnType = t; document.getElementById('btnCountdown').classList.toggle('active', t === 'countdown'); document.getElementById('btnCountup').classList.toggle('active', t === 'countup'); }
+    function saveNewAnn() { const n = document.getElementById('newAnnName').value.trim(), d = document.getElementById('newAnnDate').value; if (!n || !d) { showToast('名称和日期都要填哦'); return; } annList.push({ name: n, date: d, type: currentAnnType }); localStorage.setItem('freya_ann_list', JSON.stringify(annList)); hideAddAnnForm(); renderAnnList(); showToast('纪念日已添加 💕'); }
+    function renderAnnList() { const c = document.getElementById('annListContainer'); c.innerHTML = ''; const now = new Date(); let hr = false; annList.forEach(ann => { const d = new Date(ann.date), diff = Math.floor((now - d) / 86400000), days = Math.abs(diff); if (!hr) { document.getElementById('heroTitle').textContent = ann.name + (diff > 0 ? ' 已经' : ' 还有'); document.getElementById('heroDays').textContent = days; document.getElementById('heroSub').textContent = '目标日：' + ann.date; hr = true; } const div = document.createElement('div'); div.className = 'dm-item'; const up = diff > 0; div.innerHTML = `<span class="dm-item-name">${ann.name} ${up ? '已经' : '还有'}</span><span class="dm-item-days ${up ? 'countup' : 'countdown'}">${days} 天</span>`; c.appendChild(div); }); }
+    const letterQuotes = ["见字如面，纸短情长。","展信舒颜，顺问冬安。","云中谁寄锦书来，雁字回时，月满西楼。","从前车马很慢，书信很远，一生只够爱一个人。","见字如晤，声息可辨。","提笔千言，落笔是你。","山海自有归期，风雨自有相逢。","一封书信，半世流离。"];
+    let letters = JSON.parse(localStorage.getItem('freya_letters') || '[]');
+    let currentInboxTab = 'received';
+    function openPostPage() { document.getElementById('postPage').style.display = 'flex'; const u = letters.filter(l => l.isNew).length; const b = document.getElementById('unreadBadge'); if (u > 0) { b.textContent = u + ' 封未读'; b.style.display = 'block'; } else { b.style.display = 'none'; } }
+    function closePostPage() { document.getElementById('postPage').style.display = 'none'; }
+    function switchInboxTab(tab, el) { currentInboxTab = tab; document.querySelectorAll('.inbox-tabs .tab').forEach(t => t.classList.remove('active')); el.classList.add('active'); renderInbox(); }
+    function openWritePage() { document.getElementById('writeTitle').textContent = '写信 · 给 ' + getPartnerName(); document.getElementById('writePage').style.display = 'flex'; document.getElementById('writeContent').value = ''; showTopLetterTip(); }
+    function closeWritePage() { document.getElementById('writePage').style.display = 'none'; }
+    function openInboxPage() { renderInbox(); document.getElementById('inboxPage').style.display = 'flex'; showTopLetterTip(); }
+    function closeInboxPage() { document.getElementById('inboxPage').style.display = 'none'; }
+    function showTopLetterTip() { const tip = document.getElementById('letterTopTip'); tip.textContent = letterQuotes[Math.floor(Math.random() * letterQuotes.length)]; tip.classList.add('show'); setTimeout(() => tip.classList.remove('show'), 2500); }
+    function sendLetter() { const c = document.getElementById('writeContent').value.trim(); if (!c) { showToast('信还没写内容呢~'); return; } const now = new Date(); letters.unshift({ from: '我', to: getPartnerName(), content: c, time: (now.getMonth()+1)+'月'+now.getDate()+'日 '+now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0'), isNew: false }); localStorage.setItem('freya_letters', JSON.stringify(letters)); showToast('信件已封存寄出 ✉️'); closeWritePage(); }
+    function renderInbox() { const list = document.getElementById('inboxList'); list.innerHTML = ''; const p = getPartnerName(); let displayLetters = letters.filter(l => currentInboxTab === 'received' ? l.from !== '我' : l.from === '我'); if (displayLetters.length === 0) { list.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:80px;">${currentInboxTab === 'received' ? p + '还未给你写信' : '你还没有给' + p + '写信'}</div>`; return; } displayLetters.forEach(l => { const card = document.createElement('div'); card.className = 'letter-card'; card.onclick = () => showToast('拆开信件功能开发中...'); let f = (l.from === 'TA' || !l.from) ? p : l.from; card.innerHTML = `<div class="letter-avatar">✉️</div><div class="letter-info"><div class="letter-title">来自 ${f} ${l.isNew ? '<span class="letter-badge">暂未查看</span>' : ''}</div><div class="letter-preview">${l.content}</div></div><div class="letter-time">${l.time}</div>`; list.appendChild(card); }); }
+        // 经期
+    let periodStart = localStorage.getItem('freya_period_start');
+    function openPeriodPage() { renderCalendar(); document.getElementById('periodPage').style.display = 'flex'; }
+    function closePeriodPage() { document.getElementById('periodPage').style.display = 'none'; }
+    function recordPeriodStart() { periodStart = todayStr; localStorage.setItem('freya_period_start', periodStart); renderCalendar(); showToast('已记录本次经期开始 🩸'); }
+    function recordPeriodEnd() { showToast('已记录今天 📝'); }
+    function renderCalendar() { const grid = document.getElementById('calendarGrid'); grid.innerHTML = ''; ['日','一','二','三','四','五','六'].forEach(d => { const div = document.createElement('div'); div.className = 'calendar-day-label'; div.textContent = d; grid.appendChild(div); }); const now = new Date(), year = now.getFullYear(), month = now.getMonth(); const firstDay = new Date(year, month, 1).getDay(), daysInMonth = new Date(year, month + 1, 0).getDate(); for (let i = 0; i < firstDay; i++) { grid.innerHTML += '<div></div>'; } for (let d = 1; d <= daysInMonth; d++) { const div = document.createElement('div'); div.className = 'calendar-day'; div.textContent = d; const dateStr = `${year}-${(month+1).toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`; if (dateStr === todayStr) div.classList.add('today'); if (periodStart) { const ps = new Date(periodStart), pd = new Date(periodStart); pd.setDate(pd.getDate() + 5); if (new Date(dateStr) >= ps && new Date(dateStr) <= pd) div.classList.add('active'); } div.onclick = () => { periodStart = dateStr; localStorage.setItem('freya_period_start', periodStart); renderCalendar(); showToast('已标记 🩸'); }; grid.appendChild(div); } if (periodStart) { const start = new Date(periodStart); const diff = Math.floor((new Date() - start) / 86400000); document.getElementById('periodStatusText').textContent = '经期第 ' + (diff + 1) + ' 天'; document.getElementById('periodStatusSub').textContent = '预计下次：' + (28 - (diff % 28)) + ' 天后'; } }
+
+    // 占卜（优化后）
+    const tarotCards = ['愚者','魔术师','女祭司','女皇','皇帝','教皇','恋人','战车','力量','隐士','命运之轮','正义','倒吊人','死神','节制','恶魔','高塔','星星','月亮','太阳','审判','世界','权杖一','权杖二','权杖三','权杖四','权杖五','权杖六','权杖七','权杖八','权杖九','权杖十','权杖侍从','权杖骑士','权杖皇后','权杖国王','圣杯一','圣杯二','圣杯三','圣杯四','圣杯五','圣杯六','圣杯七','圣杯八','圣杯九','圣杯十','圣杯侍从','圣杯骑士','圣杯皇后','圣杯国王','宝剑一','宝剑二','宝剑三','宝剑四','宝剑五','宝剑六','宝剑七','宝剑八','宝剑九','宝剑十','宝剑侍从','宝剑骑士','宝剑皇后','宝剑国王','星币一','星币二','星币三','星币四','星币五','星币六','星币七','星币八','星币九','星币十','星币侍从','星币骑士','星币皇后','星币国王'];
+    const lenormandCards = ['骑士','三叶草','船','房子','树','云','蛇','棺材','花束','镰刀','鞭子','鸟','小孩','狐狸','熊','星星','鹳','狗','塔','花园','山','十字路口','老鼠','心','戒指','书','信','男人','女人','百合','太阳','月亮','钥匙','鱼','锚','十字架'];
+    let currentFortuneType = 'tarot', currentCardCount = 1, currentTarget = 'none', currentDeck = [], drawnCards = [];
+    function openFortunePage() { document.getElementById('fortunePage').style.display = 'flex'; resetToStart(); }
+    function closeFortunePage() { document.getElementById('fortunePage').style.display = 'none'; document.getElementById('fortuneResults').style.display = 'none'; document.getElementById('shuffleStage').style.display = 'none'; }
+    function selectFortuneType(el, type) { currentFortuneType = type; el.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); el.classList.add('active'); resetToStart(); }
+    function selectCardCount(el, count) { currentCardCount = count; el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); resetToStart(); }
+    function selectTarget(el, target) { currentTarget = target; el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); }
+    function resetToStart() { drawnCards = []; document.getElementById('fortuneResults').style.display = 'none'; document.getElementById('shuffleStage').style.display = 'none'; document.getElementById('cardPool').innerHTML = ''; document.getElementById('drawBtn').style.display = 'block'; document.getElementById('drawBtn').textContent = '🎴 开始洗牌'; document.getElementById('drawBtn').style.background = '#1A1A1A'; document.getElementById('drawBtn').onclick = startShuffle; document.getElementById('shuffleCompleteBtn').style.display = 'none'; }
+    function reShuffleCards() { drawnCards = []; startShuffle(); }
+    function startShuffle() { const sourceDeck = currentFortuneType === 'tarot' ? tarotCards : lenormandCards; currentDeck = [...sourceDeck].sort(() => Math.random() - 0.5); drawnCards = []; document.getElementById('fortuneResults').style.display = 'none'; document.getElementById('shuffleStage').style.display = 'flex'; document.getElementById('shuffleCompleteBtn').style.display = 'none'; document.getElementById('drawBtn').style.display = 'none'; document.getElementById('cardStatusText').textContent = '正在洗牌，请稍后...'; const pool = document.getElementById('cardPool'); pool.innerHTML = ''; for (let i = 0; i < 12; i++) { const card = document.createElement('div'); card.className = 'playing-card'; card.style.marginRight = '-60px'; card.style.transform = `translateY(${Math.random() * 20 - 10}px) rotate(${Math.random() * 10 - 5}deg)`; card.innerHTML = '<div class="card-inner"><div class="card-back">✦</div></div>'; pool.appendChild(card); } setTimeout(() => { document.getElementById('cardStatusText').textContent = '洗牌完成！点击下方按钮铺开牌面。'; document.getElementById('drawBtn').style.display = 'block'; document.getElementById('drawBtn').textContent = '👆 铺开牌面并抽牌'; document.getElementById('drawBtn').style.background = '#1A1A1A'; document.getElementById('drawBtn').onclick = fanCards; document.getElementById('shuffleCompleteBtn').style.display = 'block'; }, 800); }
+    function fanCards() { document.getElementById('drawBtn').style.display = 'none'; document.getElementById('shuffleCompleteBtn').style.display = 'none'; document.getElementById('cardStatusText').textContent = `左右滑动浏览牌面，点击卡牌抽取 ${currentCardCount} 张（已抽 0/${currentCardCount} 张）`; const pool = document.getElementById('cardPool'); pool.innerHTML = ''; for (let i = 0; i < 30; i++) { const card = document.createElement('div'); card.className = 'playing-card'; card.innerHTML = '<div class="card-inner"><div class="card-back">✦</div><div class="card-front"></div></div>'; card.onclick = () => pickCard(card); pool.appendChild(card); } }
+    function pickCard(cardElement) { if (drawnCards.length >= currentCardCount) return; if (cardElement.classList.contains('flipped')) return; const cardName = currentDeck.pop(); drawnCards.push(cardName); cardElement.classList.add('flipped'); cardElement.querySelector('.card-front').textContent = cardName; const left = currentCardCount - drawnCards.length; document.getElementById('cardStatusText').textContent = left > 0 ? `已抽 ${drawnCards.length}/${currentCardCount} 张，还需抽 ${left} 张` : '抽牌完成！'; if (left === 0) { document.getElementById('drawBtn').style.display = 'block'; document.getElementById('drawBtn').textContent = '✅ 查看抽牌结果'; document.getElementById('drawBtn').style.background = '#28a745'; document.getElementById('drawBtn').onclick = showFortuneResult; } }
+    function showFortuneResult() { document.getElementById('shuffleStage').style.display = 'none'; const results = document.getElementById('fortuneResults'); results.style.display = 'block'; results.innerHTML = ''; const q = document.getElementById('fortuneQuestion').value.trim(); if (q) results.innerHTML += `<div style="font-size:13px;color:#888;margin-bottom:15px;">问：${q}</div>`; drawnCards.forEach((c, i) => { const div = document.createElement('div'); div.className = 'card-result'; div.innerHTML = `<h4>${i+1}. ${c}</h4>`; results.appendChild(div); }); if (currentTarget === 'TA') results.innerHTML += `<div style="text-align:center;color:#FF8C9A;font-size:12px;margin-top:10px;">已自动发到聊天（模拟）</div>`; showToast('占卜完成 ✨'); }
+
+    // 备忘录
+    let memos = JSON.parse(localStorage.getItem('freya_memos') || '[]');
+    function openMemoPage() { renderMemos(); document.getElementById('memoPage').style.display = 'flex'; }
+    function closeMemoPage() { document.getElementById('memoPage').style.display = 'none'; }
+    function addMemo() { const v = document.getElementById('memoInput').value.trim(); if (!v) return; memos.push({ text: v, done: false }); localStorage.setItem('freya_memos', JSON.stringify(memos)); document.getElementById('memoInput').value = ''; renderMemos(); showToast('已添加 📝'); }
+    function renderMemos() { const l = document.getElementById('memoList'); l.innerHTML = ''; document.getElementById('memoCount').textContent = memos.length; memos.forEach((m, i) => { const d = document.createElement('div'); d.className = 'memo-item'; d.innerHTML = `<p>${m.text}</p><span class="del-btn" onclick="delMemo(${i})">✕</span>`; l.appendChild(d); }); }
+    function delMemo(i) { memos.splice(i, 1); localStorage.setItem('freya_memos', JSON.stringify(memos)); renderMemos(); }
+    function clearMemo() { memos = []; localStorage.setItem('freya_memos', JSON.stringify(memos)); renderMemos(); showToast('已清空数据 🧹'); }
+    function toggleTag(el) { el.classList.toggle('active'); }
+
+    setInterval(() => { const n = new Date(); document.getElementById('clock').textContent = n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0'); }, 1000);
+    const wallpapers = ['#FDF9F1', 'linear-gradient(135deg, #FDEBEC, #E6E9F0)', 'linear-gradient(135deg, #E0F2F1, #FCE4EC)', 'linear-gradient(135deg, #FFF3E0, #F3E5F5)'];
+    let wallIndex = 0;
+    function changeWallpaper() { wallIndex = (wallIndex + 1) % wallpapers.length; document.getElementById('phone').style.background = wallpapers[wallIndex]; }
+</script>
+</body>
+</html>
